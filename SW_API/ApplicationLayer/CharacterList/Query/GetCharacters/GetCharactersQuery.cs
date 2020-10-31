@@ -30,7 +30,7 @@ namespace ApplicationLayer.CharacterList.Query.GetCharacters
 
                     foreach (var name in characters)
                     {
-                        CharacterItem item = new CharacterItem();
+                        Domain.CharacterItem item = new Domain.CharacterItem();
                         item.Name = name;
                         var characterId = conn.Query<int>($"SELECT ID FROM characters WHERE Name = '{name}'");
                         var query = $"SELECT Name FROM episodes WHERE ID IN (SELECT ID FROM char_to_ep WHERE ID = {characterId.First()});" +

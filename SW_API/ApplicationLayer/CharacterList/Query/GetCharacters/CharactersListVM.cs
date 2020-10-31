@@ -9,8 +9,8 @@ namespace ApplicationLayer.CharacterList.Query.GetCharacters
     {
         public CharactersListVM()
         {
-            CharactersList = new List<CharacterItem>();
+            CharactersList = new List<Domain.CharacterItem>();
         }
-        public IList<CharacterItem> CharactersList { get; set; }
+        public IList<Domain.CharacterItem> CharactersList { get; set; }
     }
 }

@@ -27,6 +27,8 @@ namespace ApplicationLayerTest.Command
                     Friends = new List<string> { "Han Solo", "R2-D2" }
                 }
             };
+
+            //ACT - add and read it in the next step - see if item was added
             var handler = new CreateCharacterCommand.CreateCharacterCommandHandler(iconfMoq);
             var result = handler.Handle(command,CancellationToken.None);
 

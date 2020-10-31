@@ -9,6 +9,7 @@ using MediatR;
 using System.Text.Json;
 using ApplicationLayer;
 using Newtonsoft.Json;
+using ApplicationLayer.CharacterItem.Command.DelecteCharacter;
 
 namespace SW_API.Controllers
 {
@@ -60,8 +61,10 @@ namespace SW_API.Controllers
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async void Delete(int id)
         {
+            var command = new DeleteCharacterCommand() { characterID = id };
+            var result = await _mediator.Send(command);
         }
     }
 }
