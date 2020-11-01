@@ -18,7 +18,7 @@ might be usefull in some cases
 - **Database: MySql**
 I have preconfigured MySql database on Azure Virtual Machine so data is avilable all the time. 
 Connection string to MySql instance:
-`"server=23.100.43.177;  port=3306; user=szymon; password=starwars; database=swdb-dev"`
+`"server=168.62.6.120;  port=3306; user=szymon; password=starwars; database=swdb-dev"`
 
 Data is stored in MySql databse. I had MySql Server already installed on my machine 
 so it was easy to start with. You can also import database diractly on your machine.
