@@ -13,6 +13,8 @@ using ApplicationLayer.CharacterItem.Command.DelecteCharacter;
 using ApplicationLayer.CharacterItem.Command.UpdateCharacter;
 using System.Net.Http;
 using System.Net;
+using Swashbuckle.AspNetCore.Filters;
+using Newtonsoft.Json.Linq;
 
 namespace SW_API.Controllers
 {
@@ -27,6 +29,10 @@ namespace SW_API.Controllers
             _mediator = mediator;
         }
         // GET: api/Characters
+        /// <summary>
+        /// Returns list of all characters
+        /// </summary>
+        /// <returns>list of all characters</returns>
         [HttpGet]
         public async Task<CharactersListVM> Get()
         {
@@ -34,6 +40,30 @@ namespace SW_API.Controllers
         }
 
         // POST: api/Characters
+        /// <summary>
+        /// Creates new character
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     {
+        ///         "name": "Han Solo",
+        ///         "episodes": [
+        ///             "NEWHOPE",
+        ///             "EMPIRE",
+        ///             "JEDI"
+        ///         ],
+        ///         "friends": [
+        ///             "Luke Skywalker",
+        ///             "Leia Organa",
+        ///             "R2-D2"
+        ///          ]
+        ///     }
+        ///
+        /// </remarks>
+        /// <returns></returns>
+        /// <response code="201">Character created properly</response>
+        /// <response code="409">Character already exists, try to update it with PUT command</response>    
         [HttpPost]
         public StatusCodeResult Create([FromBody] JsonElement item)
         {
@@ -49,6 +79,28 @@ namespace SW_API.Controllers
             return new StatusCodeResult(201);
         }
 
+
+        /// <summary>
+        /// Updates existing character
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// 
+        ///     {
+        ///         "name": "Han Solo",
+        ///         "episodes": [
+        ///             "NEWHOPE",
+        ///             "EMPIRE",
+        ///             "JEDI"
+        ///         ],
+        ///         "friends": [
+        ///             "Luke Skywalker",
+        ///             "Leia Organa",
+        ///             "R2-D2"
+        ///          ]
+        ///     }
+        ///
+        /// </remarks> 
         [HttpPut]
         public async void Update([FromBody] JsonElement item)
         {
@@ -58,6 +110,12 @@ namespace SW_API.Controllers
         }
 
         // DELETE: api/Characters/5
+        /// <summary>
+        /// Deletes existing character
+        /// </summary>
+        /// <remarks> 
+        /// ID must be the same as ID in DB 
+        /// </remarks>
         [HttpDelete("{id}")]
         public async void Delete(int id)
         {
