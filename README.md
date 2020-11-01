@@ -16,9 +16,13 @@ I used Dapper for simple ORM operation becouse of simplicity of use and anemic d
 It gives developer chance to write his own transaction script which
 might be usefull in some cases
 - **Database: MySql**
+I have preconfigured MySql database on Azure Virtual Machine so data is avilable all the time. 
+Connection string to MySql instance:
+`"server=23.100.43.177;  port=3306; user=szymon; password=starwars; database=swdb-dev"`
 
 Data is stored in MySql databse. I had MySql Server already installed on my machine 
-so it was easy to start with. Export of my databse can be found here: 
+so it was easy to start with. You can also import database diractly on your machine.
+Export of my databse can be found here: 
 [swdb-dev](https://github.com/SzymonJarek/swdb-dev.git "swdb-dev").
 
 After installation change connection string in
