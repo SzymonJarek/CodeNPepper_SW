@@ -32,8 +32,8 @@ namespace ApplicationLayer.CharacterList.Query.GetCharacters
                     {
                         Domain.CharacterItem item = new Domain.CharacterItem();
                         item.Name = name;
-                        var characterId = conn.Query<int>($"SELECT ID FROM characters WHERE Name = '{name}'");
-                        var query = $"SELECT Name FROM episodes WHERE ID IN (SELECT ID FROM char_to_ep WHERE ID = {characterId.First()});" +
+                        var characterId = conn.Query<int>($"SELECT ID FROM characters WHERE Name = '{name}';");
+                        var query = $"SELECT Name FROM episodes WHERE ID IN (SELECT epID FROM char_to_ep WHERE charID = {characterId.First()});" +
                             $"SELECT Name FROM characters WHERE ID IN (SELECT FriendID From friends WHERE CharID = {characterId.First()});";
 
                         using(var multiQuery = conn.QueryMultiple(query))

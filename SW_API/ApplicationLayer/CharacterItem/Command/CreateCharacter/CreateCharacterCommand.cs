@@ -25,10 +25,23 @@ namespace ApplicationLayer
             }
             public async Task<bool> Handle(CreateCharacterCommand request, CancellationToken cancellationToken)
             {
+                //probably it would be better to refer here to some Aggregate and access DB only with Aggregation Root
+                // it might give us benefit of accessing db only once at a time( ex. within mutex);
                 using (var con = new MySqlConnection(_MySQLConnString))
                 {
                     string insertCharacter = $"INSERT INTO characters (Name) VALUE ('{request.Item.Name}');";
-                    con.ExecuteAsync(insertCharacter);
+                    try
+                    {
+                        var res = con.Execute(insertCharacter);
+                    }
+                    catch (MySqlException ex)
+                    {
+                        //this character already exists
+                        //should return info that it already exists
+                        //here we can log SQL errors
+                        return false;
+                    }
+
                     var characterID = con.Query<int>("SELECT LAST_INSERT_ID();").First();
                     foreach (var episode in request.Item.Episodes)
                     {

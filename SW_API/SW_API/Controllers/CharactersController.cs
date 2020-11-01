@@ -10,6 +10,9 @@ using System.Text.Json;
 using ApplicationLayer;
 using Newtonsoft.Json;
 using ApplicationLayer.CharacterItem.Command.DelecteCharacter;
+using ApplicationLayer.CharacterItem.Command.UpdateCharacter;
+using System.Net.Http;
+using System.Net;
 
 namespace SW_API.Controllers
 {
@@ -30,39 +33,35 @@ namespace SW_API.Controllers
             return await _mediator.Send(new GetCharactersQuery());
         }
 
-        // GET: api/Characters/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // POST: api/Characters
         [HttpPost]
-        public void Create([FromBody] JsonElement item)
+        public StatusCodeResult Create([FromBody] JsonElement item)
         {
             var command = new CreateCharacterCommand();
             command.Item = JsonConvert.DeserializeObject<CharacterItemDTO>(item.GetRawText());
-            var result = _mediator.Send(command);
-
-
-        }
-
-        // PUT: api/Characters/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            var result = _mediator.Send(command).Result;
+            if (!result)
+            {
+                //not created, character already exists
+                return new StatusCodeResult(409);
+            }
+            //everything ok
+            return new StatusCodeResult(201);
         }
 
         [HttpPut]
-        public async void Update([FromBody] JsonElement value)
+        public async void Update([FromBody] JsonElement item)
         {
+            var command = new UpdateCharacterCommand();
+            command.Item = JsonConvert.DeserializeObject<CharacterItemDTO>(item.GetRawText());
+            var result = await _mediator.Send(command);
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Characters/5
         [HttpDelete("{id}")]
         public async void Delete(int id)
         {
+            //to delete it properly i should provide ID, for now you can't see it anywhere(just in DB)
             var command = new DeleteCharacterCommand() { characterID = id };
             var result = await _mediator.Send(command);
         }
