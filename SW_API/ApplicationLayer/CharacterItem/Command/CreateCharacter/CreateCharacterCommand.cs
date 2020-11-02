@@ -29,10 +29,10 @@ namespace ApplicationLayer
                 // it might give us benefit of accessing db only once at a time( ex. within mutex);
                 using (var con = new MySqlConnection(_MySQLConnString))
                 {
-                    string insertCharacter = $"INSERT INTO characters (Name) VALUE ('{request.Item.Name}');";
+                    string insertCharacter = $"INSERT INTO characters (Name) VALUE (@characterName);";
                     try
                     {
-                        var res = con.Execute(insertCharacter);
+                        var res = con.Execute(insertCharacter, new { characterName = request.Item.Name });
                     }
                     catch (MySqlException ex)
                     {
@@ -47,7 +47,7 @@ namespace ApplicationLayer
                     {
                         try
                         {
-                            var epID = con.Query<int>($"SELECT ID FROM episodes WHERE NAME = '{episode}';").First();
+                            var epID = con.Query<int>($"SELECT ID FROM episodes WHERE NAME = @episodeName;",new { episodeName = episode }).First();
                             con.Execute($"INSERT INTO char_to_ep (epID,charID) VALUES ('{epID}','{characterID}');");
 
                         }
@@ -61,7 +61,7 @@ namespace ApplicationLayer
                     {
                         try
                         {
-                            var friendID = con.Query<int>($"SELECT ID FROM characters WHERE NAME = '{friend}';").First();
+                            var friendID = con.Query<int>($"SELECT ID FROM characters WHERE NAME = @friendName;", new { friendName = friend }).First();
                             con.Execute($"INSERT INTO friends(CharID,FriendID) VALUES ('{characterID}','{friendID}');");
 
                         }

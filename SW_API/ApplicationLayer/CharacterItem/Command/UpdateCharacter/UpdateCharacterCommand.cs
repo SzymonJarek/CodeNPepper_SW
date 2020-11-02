@@ -37,7 +37,7 @@ namespace ApplicationLayer.CharacterItem.Command.UpdateCharacter
                 int affectedRows = 0;
                 using (var con = new MySqlConnection(_MySqlConnString))
                 {
-                    var characterID = con.Query<int>($"SELECT ID FROM characters WHERE Name = '{request.Item.Name}'").First();
+                    var characterID = con.Query<int>($"SELECT ID FROM characters WHERE Name = @characterName", new { characterName = request.Item.Name }).First();
                     var deleteCharacterSQLTransaction = $"DELETE FROM char_to_ep WHERE charID = {characterID};" +
                         $"DELETE FROM friends WHERE CharID = {characterID};" +
                         $"DELETE FROM characters WHERE ID = {characterID};";
@@ -49,14 +49,14 @@ namespace ApplicationLayer.CharacterItem.Command.UpdateCharacter
                     }
 
                     //insert
-                    string insertCharacter = $"INSERT INTO characters (Name) VALUE ('{request.Item.Name}');";
-                    con.ExecuteAsync(insertCharacter);
+                    string insertCharacter = $"INSERT INTO characters (Name) VALUE (@characterName);";
+                    con.ExecuteAsync(insertCharacter, new { characterName = request.Item.Name });
                     var newCharacterID = con.Query<int>("SELECT LAST_INSERT_ID();").First();
                     foreach (var episode in request.Item.Episodes)
                     {
                         try
                         {
-                            var epID = con.Query<int>($"SELECT ID FROM episodes WHERE NAME = '{episode}';").First();
+                            var epID = con.Query<int>($"SELECT ID FROM episodes WHERE NAME = @episodeName;",new { episodeName = episode }).First();
                             con.Execute($"INSERT INTO char_to_ep (epID,charID) VALUES ('{epID}','{newCharacterID}');");
 
                         }
@@ -70,7 +70,7 @@ namespace ApplicationLayer.CharacterItem.Command.UpdateCharacter
                     {
                         try
                         {
-                            var friendID = con.Query<int>($"SELECT ID FROM characters WHERE NAME = '{friend}';").First();
+                            var friendID = con.Query<int>($"SELECT ID FROM characters WHERE NAME = @friendName;", new { friendName = friend }).First();
                             con.Execute($"INSERT INTO friends(CharID,FriendID) VALUES ('{newCharacterID}','{friendID}');");
 
                         }
